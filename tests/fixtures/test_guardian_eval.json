@@ -1,0 +1,202 @@
+[
+  {
+    "requirement": "Cart subtotal must apply a 10% discount when a valid coupon is present.",
+    "source_code": "def total(subtotal, has_coupon):\n    return subtotal",
+    "test_code": "def test_coupon_discount():\n    assert total(100, True) == 90",
+    "ci_log": "AssertionError: assert 100 == 90",
+    "expected_failure_type": "CODE_BUG",
+    "expected_reason_type": null
+  },
+  {
+    "requirement": "Users younger than 18 must be rejected with ValueError.",
+    "source_code": "def register(age):\n    if age < 13:\n        raise ValueError('too young')\n    return True",
+    "test_code": "def test_rejects_minor():\n    with pytest.raises(ValueError):\n        register(17)",
+    "ci_log": "Failed: DID NOT RAISE <class 'ValueError'>",
+    "expected_failure_type": "CODE_BUG",
+    "expected_reason_type": null
+  },
+  {
+    "requirement": "Email lookup must be case-insensitive.",
+    "source_code": "def exists(email, users):\n    return email in users",
+    "test_code": "def test_email_lookup_is_case_insensitive():\n    assert exists('ALICE@example.com', {'alice@example.com'})",
+    "ci_log": "AssertionError: assert False",
+    "expected_failure_type": "CODE_BUG",
+    "expected_reason_type": null
+  },
+  {
+    "requirement": "An empty cart must have a total of 0 and no shipping fee.",
+    "source_code": "def cart_total(items):\n    return sum(items) + 5",
+    "test_code": "def test_empty_cart_total():\n    assert cart_total([]) == 0",
+    "ci_log": "AssertionError: assert 5 == 0",
+    "expected_failure_type": "CODE_BUG",
+    "expected_reason_type": null
+  },
+  {
+    "requirement": "Passwords must be at least 12 characters long.",
+    "source_code": "def valid_password(password):\n    return len(password) >= 8",
+    "test_code": "def test_short_password_rejected():\n    assert valid_password('abcdefgh') is False",
+    "ci_log": "AssertionError: assert True is False",
+    "expected_failure_type": "CODE_BUG",
+    "expected_reason_type": null
+  },
+  {
+    "requirement": "Cart subtotal must apply a 10% discount when a valid coupon is present.",
+    "source_code": "def total(subtotal, has_coupon):\n    return subtotal * 0.9 if has_coupon else subtotal",
+    "test_code": "def test_coupon_discount():\n    assert total(100, True) == 80",
+    "ci_log": "AssertionError: assert 90.0 == 80",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_ASSERTION"
+  },
+  {
+    "requirement": "Tax must be calculated at 8%.",
+    "source_code": "def total_with_tax(amount):\n    return amount * 1.08",
+    "test_code": "def test_tax_rate():\n    assert total_with_tax(100) == 110",
+    "ci_log": "AssertionError: assert 108.0 == 110",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_ASSERTION"
+  },
+  {
+    "requirement": "A successful login response must include the field user_id.",
+    "source_code": "def login_response(user_id):\n    return {'user_id': user_id}",
+    "test_code": "def test_login_response_id():\n    assert login_response(1)['id'] == 1",
+    "ci_log": "KeyError: 'id'",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_ASSERTION"
+  },
+  {
+    "requirement": "Priority sorting must order lower numeric priority before higher numeric priority.",
+    "source_code": "def sort_tasks(tasks):\n    return sorted(tasks, key=lambda task: task['priority'])",
+    "test_code": "def test_priority_sort():\n    assert sort_tasks([{'priority': 2}, {'priority': 1}])[0]['priority'] == 2",
+    "ci_log": "AssertionError: assert 1 == 2",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_ASSERTION"
+  },
+  {
+    "requirement": "Rounding must use two decimal places.",
+    "source_code": "def format_amount(value):\n    return round(value, 2)",
+    "test_code": "def test_rounding():\n    assert format_amount(10.126) == 10.12",
+    "ci_log": "AssertionError: assert 10.13 == 10.12",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_ASSERTION"
+  },
+  {
+    "requirement": "Negative quantity must raise ValueError.",
+    "source_code": "def total(price, quantity):\n    if quantity < 0:\n        raise ValueError('quantity must be non-negative')\n    return price * quantity",
+    "test_code": "def test_negative_quantity():\n    with pytest.raises(TypeError):\n        total(10, -1)",
+    "ci_log": "E   ValueError: quantity must be non-negative",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_EXCEPTION"
+  },
+  {
+    "requirement": "Missing user records must raise LookupError.",
+    "source_code": "def find_user(user_id, users):\n    if user_id not in users:\n        raise LookupError('missing user')\n    return users[user_id]",
+    "test_code": "def test_missing_user():\n    with pytest.raises(KeyError):\n        find_user(3, {})",
+    "ci_log": "E   LookupError: missing user",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_EXCEPTION"
+  },
+  {
+    "requirement": "Invalid email addresses must raise ValueError.",
+    "source_code": "def normalize_email(email):\n    if '@' not in email:\n        raise ValueError('invalid email')\n    return email.lower()",
+    "test_code": "def test_invalid_email():\n    with pytest.raises(RuntimeError):\n        normalize_email('not-an-email')",
+    "ci_log": "E   ValueError: invalid email",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_EXCEPTION"
+  },
+  {
+    "requirement": "Expired tokens must raise PermissionError.",
+    "source_code": "def validate_token(expired):\n    if expired:\n        raise PermissionError('expired token')\n    return True",
+    "test_code": "def test_expired_token():\n    with pytest.raises(ValueError):\n        validate_token(True)",
+    "ci_log": "E   PermissionError: expired token",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_EXCEPTION"
+  },
+  {
+    "requirement": "Division by zero must raise ZeroDivisionError.",
+    "source_code": "def divide(left, right):\n    return left / right",
+    "test_code": "def test_divide_by_zero():\n    with pytest.raises(ValueError):\n        divide(10, 0)",
+    "ci_log": "E   ZeroDivisionError: division by zero",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_EXCEPTION"
+  },
+  {
+    "requirement": "Discount percentage input must be between 1 and 100 inclusive.",
+    "source_code": "def apply_discount(amount, percent):\n    if not 1 <= percent <= 100:\n        raise ValueError('percent out of range')\n    return amount * (1 - percent / 100)",
+    "test_code": "def test_large_discount():\n    assert apply_discount(100, 1000) == 0",
+    "ci_log": "E   ValueError: percent out of range",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_INPUT"
+  },
+  {
+    "requirement": "Page size must be between 1 and 100 inclusive.",
+    "source_code": "def fetch_page(size):\n    if size < 1 or size > 100:\n        raise ValueError('invalid page size')\n    return list(range(size))",
+    "test_code": "def test_page_size_500():\n    assert len(fetch_page(500)) == 500",
+    "ci_log": "E   ValueError: invalid page size",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_INPUT"
+  },
+  {
+    "requirement": "Username length must be between 3 and 20 characters.",
+    "source_code": "def valid_username(name):\n    return 3 <= len(name) <= 20",
+    "test_code": "def test_long_username_allowed():\n    assert valid_username('a' * 25)",
+    "ci_log": "AssertionError: assert False",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_INPUT"
+  },
+  {
+    "requirement": "Upload size must not exceed 5 MB.",
+    "source_code": "def upload(size_mb):\n    if size_mb > 5:\n        raise ValueError('file too large')\n    return True",
+    "test_code": "def test_upload_10_mb():\n    assert upload(10)",
+    "ci_log": "E   ValueError: file too large",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_INPUT"
+  },
+  {
+    "requirement": "Order quantity must be between 1 and 10 inclusive.",
+    "source_code": "def place_order(quantity):\n    if quantity < 1 or quantity > 10:\n        raise ValueError('invalid quantity')\n    return 'ok'",
+    "test_code": "def test_bulk_order():\n    assert place_order(25) == 'ok'",
+    "ci_log": "E   ValueError: invalid quantity",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "WRONG_INPUT"
+  },
+  {
+    "requirement": "README: tax rate is 10%. Issue: tax rate changed to 8%. The issue is the latest requirement.",
+    "source_code": "def total_with_tax(amount):\n    return amount * 1.08",
+    "test_code": "def test_tax_rate():\n    assert total_with_tax(100) == 110",
+    "ci_log": "AssertionError: assert 108.0 == 110",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "OUTDATED_TEST"
+  },
+  {
+    "requirement": "README: password minimum length is 8. Issue: password minimum length changed to 12.",
+    "source_code": "def valid_password(password):\n    return len(password) >= 12",
+    "test_code": "def test_eight_character_password():\n    assert valid_password('abcdefgh')",
+    "ci_log": "AssertionError: assert False",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "OUTDATED_TEST"
+  },
+  {
+    "requirement": "README: API response field is id. Issue: response field changed to user_id.",
+    "source_code": "def response(user_id):\n    return {'user_id': user_id}",
+    "test_code": "def test_response_id():\n    assert response(7)['id'] == 7",
+    "ci_log": "KeyError: 'id'",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "OUTDATED_TEST"
+  },
+  {
+    "requirement": "README: free shipping threshold is 50. Issue: threshold changed to 75.",
+    "source_code": "def shipping(subtotal):\n    return 0 if subtotal >= 75 else 5",
+    "test_code": "def test_free_shipping_at_50():\n    assert shipping(50) == 0",
+    "ci_log": "AssertionError: assert 5 == 0",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "OUTDATED_TEST"
+  },
+  {
+    "requirement": "README: inactive users are included. Issue: inactive users must be excluded from search results.",
+    "source_code": "def search(users):\n    return [user for user in users if user['active']]",
+    "test_code": "def test_search_includes_inactive_users():\n    users = [{'active': True}, {'active': False}]\n    assert len(search(users)) == 2",
+    "ci_log": "AssertionError: assert 1 == 2",
+    "expected_failure_type": "TEST_BUG",
+    "expected_reason_type": "OUTDATED_TEST"
+  }
+]
