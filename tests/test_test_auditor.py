@@ -1,7 +1,7 @@
-import unittest
+﻿import unittest
 from types import SimpleNamespace
 
-from test_guardian.auditors.test_auditor import OpenAITestAuditor
+from test_guardian.agents.test_auditor.openai import OpenAITestAuditor
 from test_guardian.models.failure import FailureAnalysisInput
 from test_guardian.models.requirements import ExtractedRequirement
 from test_guardian.models.test_audit import TestAuditResult, TestBugReason

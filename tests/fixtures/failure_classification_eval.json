@@ -1,0 +1,226 @@
+[
+  {
+    "requirement": "A valid coupon applies a 10% discount to the subtotal.",
+    "source_code": "def total(subtotal, has_coupon):\n    return subtotal",
+    "test_code": "def test_coupon_discount():\n    assert total(100, True) == 90",
+    "ci_log": "AssertionError: assert 100 == 90",
+    "expected_failure_type": "CODE_BUG"
+  },
+  {
+    "requirement": "Negative quantity must raise ValueError.",
+    "source_code": "def total(price, quantity):\n    return price * quantity",
+    "test_code": "def test_negative_quantity():\n    with pytest.raises(ValueError):\n        total(10, -1)",
+    "ci_log": "Failed: DID NOT RAISE <class 'ValueError'>",
+    "expected_failure_type": "CODE_BUG"
+  },
+  {
+    "requirement": "Email lookup must be case-insensitive.",
+    "source_code": "def exists(email, users):\n    return email in users",
+    "test_code": "def test_email_lookup():\n    assert exists('ALICE@example.com', {'alice@example.com'})",
+    "ci_log": "AssertionError: assert False",
+    "expected_failure_type": "CODE_BUG"
+  },
+  {
+    "requirement": "An empty cart must have total 0 with no shipping fee.",
+    "source_code": "def total(items):\n    return sum(items) + 5",
+    "test_code": "def test_empty_cart():\n    assert total([]) == 0",
+    "ci_log": "AssertionError: assert 5 == 0",
+    "expected_failure_type": "CODE_BUG"
+  },
+  {
+    "requirement": "Passwords must be at least 12 characters long.",
+    "source_code": "def valid(password):\n    return len(password) >= 8",
+    "test_code": "def test_eight_chars_rejected():\n    assert valid('abcdefgh') is False",
+    "ci_log": "AssertionError: assert True is False",
+    "expected_failure_type": "CODE_BUG"
+  },
+  {
+    "requirement": "API search must return only active users.",
+    "source_code": "def search(users):\n    return [user for user in users if not user['deleted']]",
+    "test_code": "def test_search_active_only():\n    users = [{'active': True, 'deleted': False}, {'active': False, 'deleted': False}]\n    assert len(search(users)) == 1",
+    "ci_log": "AssertionError: assert 2 == 1",
+    "expected_failure_type": "CODE_BUG"
+  },
+  {
+    "requirement": "Priority sorting must sort by priority and then creation time.",
+    "source_code": "def sort_tasks(tasks):\n    return sorted(tasks, key=lambda task: task['priority'])",
+    "test_code": "def test_tie_breaker():\n    tasks = [{'priority': 1, 'created': 2}, {'priority': 1, 'created': 1}]\n    assert sort_tasks(tasks)[0]['created'] == 1",
+    "ci_log": "AssertionError: assert 2 == 1",
+    "expected_failure_type": "CODE_BUG"
+  },
+  {
+    "requirement": "Async send must return ACCEPTED immediately before background completion.",
+    "source_code": "async def send_email(queue, message):\n    await queue.deliver(message)\n    return 'COMPLETED'",
+    "test_code": "async def test_send_returns_accepted(queue):\n    assert await send_email(queue, 'hi') == 'ACCEPTED'",
+    "ci_log": "AssertionError: assert 'COMPLETED' == 'ACCEPTED'",
+    "expected_failure_type": "CODE_BUG"
+  },
+  {
+    "requirement": "A valid coupon applies a 10% discount to the subtotal.",
+    "source_code": "def total(subtotal, has_coupon):\n    return subtotal * 0.9 if has_coupon else subtotal",
+    "test_code": "def test_coupon_discount():\n    assert total(100, True) == 80",
+    "ci_log": "AssertionError: assert 90.0 == 80",
+    "expected_failure_type": "TEST_BUG"
+  },
+  {
+    "requirement": "Negative quantity must raise ValueError.",
+    "source_code": "def total(price, quantity):\n    if quantity < 0:\n        raise ValueError('invalid quantity')\n    return price * quantity",
+    "test_code": "def test_negative_quantity():\n    with pytest.raises(TypeError):\n        total(10, -1)",
+    "ci_log": "ValueError: invalid quantity",
+    "expected_failure_type": "TEST_BUG"
+  },
+  {
+    "requirement": "Page size must be between 1 and 100 inclusive.",
+    "source_code": "def fetch_page(size):\n    if size < 1 or size > 100:\n        raise ValueError('invalid page size')\n    return list(range(size))",
+    "test_code": "def test_page_size_500():\n    assert len(fetch_page(500)) == 500",
+    "ci_log": "ValueError: invalid page size",
+    "expected_failure_type": "TEST_BUG"
+  },
+  {
+    "requirement": "The response field must be user_id.",
+    "source_code": "def response(user_id):\n    return {'user_id': user_id}",
+    "test_code": "def test_response_id():\n    assert response(7)['id'] == 7",
+    "ci_log": "KeyError: 'id'",
+    "expected_failure_type": "TEST_BUG"
+  },
+  {
+    "requirement": "Tax rate is 8%.",
+    "source_code": "def total(amount):\n    return amount * 1.08",
+    "test_code": "def test_tax_rate():\n    assert total(100) == 110",
+    "ci_log": "AssertionError: assert 108.0 == 110",
+    "expected_failure_type": "TEST_BUG"
+  },
+  {
+    "requirement": "Username length must be between 3 and 20 characters.",
+    "source_code": "def valid_username(name):\n    return 3 <= len(name) <= 20",
+    "test_code": "def test_long_username_allowed():\n    assert valid_username('a' * 25)",
+    "ci_log": "AssertionError: assert False",
+    "expected_failure_type": "TEST_BUG"
+  },
+  {
+    "requirement": "Async send must return ACCEPTED immediately.",
+    "source_code": "async def send_email(queue, message):\n    queue.enqueue(message)\n    return 'ACCEPTED'",
+    "test_code": "async def test_send_returns_completed(queue):\n    assert await send_email(queue, 'hi') == 'COMPLETED'",
+    "ci_log": "AssertionError: assert 'ACCEPTED' == 'COMPLETED'",
+    "expected_failure_type": "TEST_BUG"
+  },
+  {
+    "requirement": "Each test must get isolated mutable state from the fixture.",
+    "source_code": "def add_item(state, item):\n    state.append(item)\n    return state",
+    "test_code": "shared_state = []\ndef test_one():\n    assert add_item(shared_state, 'a') == ['a']\ndef test_two():\n    assert add_item(shared_state, 'b') == ['b']",
+    "ci_log": "AssertionError: assert ['a', 'b'] == ['b']",
+    "expected_failure_type": "TEST_BUG"
+  },
+  {
+    "requirement": "A valid coupon applies a 10% discount to the subtotal.",
+    "source_code": "def total(subtotal, has_coupon):\n    return subtotal",
+    "test_code": "def test_coupon_discount():\n    assert total(100, True) == 80",
+    "ci_log": "AssertionError: assert 100 == 80",
+    "expected_failure_type": "BOTH"
+  },
+  {
+    "requirement": "Negative quantity must raise ValueError.",
+    "source_code": "def total(price, quantity):\n    return price * quantity",
+    "test_code": "def test_negative_quantity():\n    with pytest.raises(TypeError):\n        total(10, -1)",
+    "ci_log": "Failed: DID NOT RAISE <class 'TypeError'>",
+    "expected_failure_type": "BOTH"
+  },
+  {
+    "requirement": "Email lookup must be case-insensitive.",
+    "source_code": "def exists(email, users):\n    return email in users",
+    "test_code": "def test_email_lookup():\n    assert exists('ALICE@example.com', {'alice@example.com'}) is False",
+    "ci_log": "AssertionError: expected case-insensitive lookup but test expects False",
+    "expected_failure_type": "BOTH"
+  },
+  {
+    "requirement": "Tax rate changed from 10% to 8%.",
+    "source_code": "def total(amount):\n    return amount * 1.10",
+    "test_code": "def test_tax_rate():\n    assert total(100) == 110",
+    "ci_log": "Test passes locally but violates updated requirement",
+    "expected_failure_type": "BOTH"
+  },
+  {
+    "requirement": "The response field must be user_id.",
+    "source_code": "def response(user_id):\n    return {'id': user_id}",
+    "test_code": "def test_response():\n    assert response(7)['id'] == 7",
+    "ci_log": "Test expectation follows old field name id",
+    "expected_failure_type": "BOTH"
+  },
+  {
+    "requirement": "Page size must be between 1 and 100 inclusive and invalid sizes raise ValueError.",
+    "source_code": "def fetch_page(size):\n    return list(range(size))",
+    "test_code": "def test_page_size_500():\n    assert len(fetch_page(500)) == 500",
+    "ci_log": "Test uses out-of-range input and source accepts it",
+    "expected_failure_type": "BOTH"
+  },
+  {
+    "requirement": "Async send must return ACCEPTED immediately and enqueue the message exactly once.",
+    "source_code": "async def send_email(queue, message):\n    return 'COMPLETED'",
+    "test_code": "async def test_send(queue):\n    assert await send_email(queue, 'hi') == 'COMPLETED'\n    queue.enqueue.assert_called_once()",
+    "ci_log": "AssertionError: expected enqueue to be called once",
+    "expected_failure_type": "BOTH"
+  },
+  {
+    "requirement": "Passwords must be at least 12 characters long.",
+    "source_code": "def valid(password):\n    return len(password) >= 8",
+    "test_code": "def test_password():\n    assert valid('abcdefgh') is True",
+    "ci_log": "Test follows old 8-character rule while code also follows old rule",
+    "expected_failure_type": "BOTH"
+  },
+  {
+    "requirement": "The checkout service must calculate the final payable amount.",
+    "source_code": "def checkout(order):\n    return order.total()",
+    "test_code": "def test_checkout(order):\n    assert checkout(order) == 42",
+    "ci_log": "AssertionError: assert 41 == 42",
+    "expected_failure_type": "UNKNOWN"
+  },
+  {
+    "requirement": "The report exporter must produce a valid report.",
+    "source_code": "def export(report):\n    return render(report)",
+    "test_code": "def test_export(report):\n    assert export(report)",
+    "ci_log": "Process exited with status 1",
+    "expected_failure_type": "UNKNOWN"
+  },
+  {
+    "requirement": "The cache should behave according to product requirements.",
+    "source_code": "def get(key):\n    return cache[key]",
+    "test_code": "def test_cache():\n    assert get('x') == 'y'",
+    "ci_log": "KeyError: 'x'",
+    "expected_failure_type": "UNKNOWN"
+  },
+  {
+    "requirement": "The API must return data in the agreed format.",
+    "source_code": "def api():\n    return client.fetch()",
+    "test_code": "def test_api():\n    assert api() == {'ok': True}",
+    "ci_log": "ConnectionError: service unavailable",
+    "expected_failure_type": "UNKNOWN"
+  },
+  {
+    "requirement": "The scheduler should run jobs at the configured interval.",
+    "source_code": "def schedule(job):\n    return scheduler.add(job)",
+    "test_code": "def test_schedule(job):\n    assert schedule(job).next_run is not None",
+    "ci_log": "Timeout waiting for scheduler",
+    "expected_failure_type": "UNKNOWN"
+  },
+  {
+    "requirement": "The parser should handle supported document files.",
+    "source_code": "def parse(path):\n    return parser.parse(path)",
+    "test_code": "def test_parse(tmp_path):\n    assert parse(tmp_path / 'input.doc')",
+    "ci_log": "FileNotFoundError: input.doc",
+    "expected_failure_type": "UNKNOWN"
+  },
+  {
+    "requirement": "The authentication flow must reject invalid sessions.",
+    "source_code": "def authenticate(session):\n    return auth.check(session)",
+    "test_code": "def test_auth(session):\n    assert authenticate(session) is False",
+    "ci_log": "Fixture 'session' not configured with required fields",
+    "expected_failure_type": "UNKNOWN"
+  },
+  {
+    "requirement": "The billing calculation must match the current pricing policy.",
+    "source_code": "def bill(account):\n    return pricing.calculate(account)",
+    "test_code": "def test_bill(account):\n    assert bill(account) == 1999",
+    "ci_log": "AssertionError without pricing policy details",
+    "expected_failure_type": "UNKNOWN"
+  }
+]

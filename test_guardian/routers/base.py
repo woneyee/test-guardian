@@ -1,13 +1,7 @@
-"""Router interfaces for the Test Guardian MVP."""
+"""Backward-compatible router interface import."""
 
-from typing import Protocol
+from test_guardian.agents.router.base import FailureRouter
 
-from test_guardian.models.failure import FailureAnalysisResult
-from test_guardian.models.routing import RoutingResult
-
-
-class FailureRouter(Protocol):
-    """Contract for routing failure analysis results to specialized agents."""
-
-    def route(self, analysis: FailureAnalysisResult) -> RoutingResult:
-        """Route the failure analysis result to the next agent target."""
+__all__ = [
+    "FailureRouter",
+]

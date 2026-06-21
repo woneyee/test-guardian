@@ -1,8 +1,8 @@
-import unittest
+﻿import unittest
 
 from test_guardian.models.failure import FailureAnalysisResult, FailureType
 from test_guardian.models.routing import RouteTarget
-from test_guardian.routers.failure_router import SimpleFailureRouter
+from test_guardian.agents.router.simple import SimpleFailureRouter
 
 
 class SimpleFailureRouterTests(unittest.TestCase):

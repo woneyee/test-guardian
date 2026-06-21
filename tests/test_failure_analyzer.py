@@ -1,11 +1,14 @@
-import unittest
+﻿import unittest
 from types import SimpleNamespace
 
-from test_guardian.analyzers.failure_analyzer import (
+from test_guardian.agents.failure_analyzer.openai import (
     DEFAULT_MODEL,
     OpenAIFailureAnalyzer,
+    OpenAIFailureAnalyzerV2,
 )
 from test_guardian.models.failure import (
+    ExperimentalFailureAnalysisResult,
+    ExperimentalFailureType,
     FailureAnalysisInput,
     FailureAnalysisResult,
     FailureType,
@@ -67,6 +70,8 @@ class OpenAIFailureAnalyzerTests(unittest.TestCase):
         self.assertEqual(call["temperature"], 0)
         self.assertIn("CODE_BUG", call["instructions"])
         self.assertIn("TEST_BUG", call["instructions"])
+        self.assertNotIn("BOTH", call["instructions"])
+        self.assertNotIn("UNKNOWN", call["instructions"])
         self.assertIn("Calculate discounts", call["input"])
         self.assertIn("AssertionError", call["input"])
 
@@ -88,6 +93,24 @@ class OpenAIFailureAnalyzerTests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             analyzer.analyze(self._input())
+
+    def test_v2_prompt_uses_explicit_source_and_test_checks(self) -> None:
+        expected = ExperimentalFailureAnalysisResult(
+            failure_type=ExperimentalFailureType.BOTH,
+            confidence=0.74,
+            reason="Source=YES and Test=YES.",
+        )
+        client = FakeClient(expected)
+        analyzer = OpenAIFailureAnalyzerV2(client=client, model="gpt-test")
+
+        analyzer.analyze(self._input())
+
+        call = client.responses.calls[0]
+        self.assertEqual(call["text_format"], ExperimentalFailureAnalysisResult)
+        self.assertIn("Does the source code violate the requirement?", call["instructions"])
+        self.assertIn("Does the test code violate the requirement?", call["instructions"])
+        self.assertIn("Source=YES and Test=YES -> BOTH", call["instructions"])
+        self.assertIn("Source=UNKNOWN and Test=UNKNOWN -> UNKNOWN", call["instructions"])
 
     def _input(self) -> FailureAnalysisInput:
         return FailureAnalysisInput(

@@ -1,4 +1,4 @@
-import json
+﻿import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -9,7 +9,7 @@ from test_guardian.models.pipeline import PipelineResult
 from test_guardian.models.requirements import ExtractedRequirement
 from test_guardian.models.routing import RouteTarget, RoutingResult
 from test_guardian.models.test_audit import TestAuditResult, TestBugReason
-from test_guardian.services.evaluation_runner import (
+from test_guardian.evaluation.evaluation_runner import (
     EvaluationRunner,
     evaluate_failure_types,
     evaluate_reason_types,

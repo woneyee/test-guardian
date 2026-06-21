@@ -1,6 +1,6 @@
-import unittest
+﻿import unittest
 
-from test_guardian.analyzers.requirement_extractor import SimpleRequirementExtractor
+from test_guardian.agents.requirement_extractor.simple import SimpleRequirementExtractor
 from test_guardian.models.requirements import RequirementInput
 
 

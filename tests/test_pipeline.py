@@ -1,11 +1,11 @@
-import unittest
+﻿import unittest
 
 from test_guardian.models.failure import FailureAnalysisInput, FailureAnalysisResult
 from test_guardian.models.pipeline import PipelineResult
 from test_guardian.models.requirements import ExtractedRequirement, RequirementInput
 from test_guardian.models.routing import RouteTarget, RoutingResult
 from test_guardian.models.test_audit import TestAuditResult, TestBugReason
-from test_guardian.pipeline import GuardianPipeline
+from test_guardian.workflows.guardian_pipeline import GuardianPipeline
 
 
 class FakeRequirementExtractor:

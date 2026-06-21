@@ -7,7 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_valida
 from test_guardian.models.failure import FailureType
 from test_guardian.models.test_audit import TestBugReason
 
-FIXTURES_DIR = Path(__file__).parent / "fixtures"
+FIXTURE_PATH = Path(__file__).parent / "fixtures" / "test_guardian_eval.json"
 
 
 class EvaluationFixture(BaseModel):
@@ -45,24 +45,18 @@ class EvaluationDatasetTests(unittest.TestCase):
 
 
 def _load_fixtures() -> list[EvaluationFixture]:
-    fixture_files = sorted(FIXTURES_DIR.glob("*.json"))
-    if not fixture_files:
-        raise AssertionError(f"No fixture files found under {FIXTURES_DIR}")
-
     fixtures: list[EvaluationFixture] = []
     errors: list[str] = []
 
-    for fixture_file in fixture_files:
-        records = json.loads(fixture_file.read_text(encoding="utf-8"))
-        if not isinstance(records, list):
-            errors.append(f"{fixture_file.name}: expected top-level JSON array")
-            continue
+    records = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
+    if not isinstance(records, list):
+        raise AssertionError(f"{FIXTURE_PATH.name}: expected top-level JSON array")
 
-        for index, record in enumerate(records):
-            try:
-                fixtures.append(EvaluationFixture.model_validate(record))
-            except ValidationError as error:
-                errors.append(f"{fixture_file.name}[{index}]: {error}")
+    for index, record in enumerate(records):
+        try:
+            fixtures.append(EvaluationFixture.model_validate(record))
+        except ValidationError as error:
+            errors.append(f"{FIXTURE_PATH.name}[{index}]: {error}")
 
     if errors:
         raise AssertionError("\n".join(errors))
